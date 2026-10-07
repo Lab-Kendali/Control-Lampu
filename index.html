@@ -1,12 +1,37 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
+  <!-- =====================================================
+       META
+       ===================================================== -->
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
   <title>Kontrol 8 Lampu</title>
 
+
+  <!-- =====================================================
+       SUPABASE JAVASCRIPT
+       ===================================================== -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+  <!-- =====================================================
+       CSS
+       ===================================================== -->
+
   <style>
+
+    /* =====================================================
+       RESET
+       ===================================================== */
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -14,224 +39,638 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
+
+    /* =====================================================
+       BODY
+       ===================================================== */
+
     body {
-      background: #f2f4f7;
-      color: #222;
+      background: #f3f4f6;
+      color: #1f2937;
       min-height: 100vh;
     }
 
-    /* HEADER */
+
+    /* =====================================================
+       HEADER
+       ===================================================== */
+
     .header {
+
       background: #1f2937;
+
       color: white;
-      padding: 20px;
+
+      padding: 25px 20px;
+
       text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+
+      box-shadow:
+        0 3px 10px rgba(0,0,0,0.15);
+
     }
+
 
     .header h1 {
+
       font-size: 28px;
-      margin-bottom: 5px;
+
+      margin-bottom: 8px;
+
     }
+
 
     .header p {
+
       font-size: 14px;
+
       color: #d1d5db;
+
     }
 
-    /* CONTAINER */
-    .container {
-      width: 95%;
-      max-width: 1100px;
-      margin: 30px auto;
-    }
 
-    /* STATUS */
-    .status-box {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 25px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    /* =====================================================
+       CONNECTION STATUS
+       ===================================================== */
+
+    .connection {
+
       display: flex;
-      justify-content: space-between;
+
+      justify-content: center;
+
       align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
+
+      gap: 8px;
+
+      margin-top: 12px;
+
+      font-size: 13px;
+
     }
+
+
+    .connection-dot {
+
+      width: 10px;
+
+      height: 10px;
+
+      border-radius: 50%;
+
+      background: #ef4444;
+
+    }
+
+
+    .connection-dot.connected {
+
+      background: #22c55e;
+
+    }
+
+
+    /* =====================================================
+       CONTAINER
+       ===================================================== */
+
+    .container {
+
+      width: 95%;
+
+      max-width: 1100px;
+
+      margin: 30px auto;
+
+    }
+
+
+    /* =====================================================
+       STATUS BOX
+       ===================================================== */
+
+    .status-box {
+
+      background: white;
+
+      border-radius: 14px;
+
+      padding: 20px;
+
+      margin-bottom: 25px;
+
+      box-shadow:
+        0 3px 10px rgba(0,0,0,0.08);
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      flex-wrap: wrap;
+
+      gap: 15px;
+
+    }
+
 
     .status-title {
+
       font-size: 18px;
+
       font-weight: bold;
+
     }
+
 
     .status-count {
+
       font-size: 16px;
+
     }
+
 
     #jumlahNyala {
+
+      font-size: 20px;
+
       font-weight: bold;
+
       color: #16a34a;
+
     }
 
-    /* GRID LAMPU */
+
+    /* =====================================================
+       GRID
+       ===================================================== */
+
     .lamp-grid {
+
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
       gap: 20px;
+
     }
 
-    /* CARD LAMPU */
+
+    /* =====================================================
+       CARD LAMPU
+       ===================================================== */
+
     .lamp-card {
+
       background: white;
+
       border-radius: 15px;
+
       padding: 25px 15px;
+
       text-align: center;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+
+      box-shadow:
+        0 3px 10px rgba(0,0,0,0.08);
+
       transition: 0.3s;
+
     }
+
 
     .lamp-card:hover {
+
       transform: translateY(-3px);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+
+      box-shadow:
+        0 7px 18px rgba(0,0,0,0.12);
+
     }
 
-    /* ICON LAMPU */
+
+    /* =====================================================
+       ICON LAMPU
+       ===================================================== */
+
     .lamp-icon {
+
       font-size: 55px;
+
       margin-bottom: 10px;
+
       filter: grayscale(1);
-      opacity: 0.5;
+
+      opacity: 0.45;
+
       transition: 0.3s;
+
     }
+
 
     .lamp-card.active .lamp-icon {
+
       filter: grayscale(0);
+
       opacity: 1;
+
     }
+
+
+    /* =====================================================
+       NAMA LAMPU
+       ===================================================== */
 
     .lamp-name {
+
       font-size: 18px;
+
       font-weight: bold;
+
       margin-bottom: 8px;
+
     }
+
+
+    /* =====================================================
+       STATUS LAMPU
+       ===================================================== */
 
     .lamp-status {
+
       font-size: 14px;
+
       font-weight: bold;
-      margin-bottom: 15px;
+
       color: #dc2626;
+
+      margin-bottom: 15px;
+
     }
+
 
     .lamp-card.active .lamp-status {
+
       color: #16a34a;
+
     }
 
-    /* TOMBOL */
+
+    /* =====================================================
+       TOMBOL
+       ===================================================== */
+
     .button-group {
+
       display: flex;
+
       justify-content: center;
+
       gap: 8px;
+
     }
+
 
     button {
+
       border: none;
+
       border-radius: 8px;
+
       padding: 10px 18px;
+
       font-size: 14px;
+
       font-weight: bold;
+
       cursor: pointer;
+
       transition: 0.2s;
+
     }
+
 
     button:hover {
+
       transform: scale(1.05);
+
     }
+
+
+    button:disabled {
+
+      opacity: 0.5;
+
+      cursor: not-allowed;
+
+      transform: none;
+
+    }
+
+
+    /* =====================================================
+       BUTTON ON
+       ===================================================== */
 
     .btn-on {
+
       background: #22c55e;
+
       color: white;
+
     }
+
 
     .btn-on:hover {
+
       background: #16a34a;
+
     }
+
+
+    /* =====================================================
+       BUTTON OFF
+       ===================================================== */
 
     .btn-off {
+
       background: #ef4444;
+
       color: white;
+
     }
+
 
     .btn-off:hover {
+
       background: #dc2626;
+
     }
 
-    /* FOOTER */
-    .footer {
-      text-align: center;
-      margin-top: 35px;
-      padding: 20px;
-      color: #6b7280;
+
+    /* =====================================================
+       LOADING
+       ===================================================== */
+
+    .loading {
+
+      position: fixed;
+
+      top: 20px;
+
+      right: 20px;
+
+      background: #1f2937;
+
+      color: white;
+
+      padding: 10px 15px;
+
+      border-radius: 8px;
+
       font-size: 13px;
+
+      display: none;
+
+      z-index: 999;
+
     }
 
-    /* RESPONSIVE */
-    @media (max-width: 800px) {
-      .lamp-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+
+    /* =====================================================
+       NOTIFICATION
+       ===================================================== */
+
+    .notification {
+
+      position: fixed;
+
+      bottom: 20px;
+
+      right: 20px;
+
+      padding: 13px 18px;
+
+      border-radius: 8px;
+
+      color: white;
+
+      font-size: 14px;
+
+      display: none;
+
+      z-index: 1000;
+
+      box-shadow:
+        0 4px 12px rgba(0,0,0,0.15);
+
     }
+
+
+    .notification.success {
+
+      background: #16a34a;
+
+    }
+
+
+    .notification.error {
+
+      background: #dc2626;
+
+    }
+
+
+    /* =====================================================
+       FOOTER
+       ===================================================== */
+
+    .footer {
+
+      text-align: center;
+
+      margin-top: 35px;
+
+      padding: 20px;
+
+      color: #6b7280;
+
+      font-size: 13px;
+
+    }
+
+
+    /* =====================================================
+       RESPONSIVE TABLET
+       ===================================================== */
+
+    @media (max-width: 800px) {
+
+      .lamp-grid {
+
+        grid-template-columns:
+          repeat(2, 1fr);
+
+      }
+
+    }
+
+
+    /* =====================================================
+       RESPONSIVE HP
+       ===================================================== */
 
     @media (max-width: 500px) {
+
       .lamp-grid {
+
         grid-template-columns: 1fr;
+
       }
+
 
       .header h1 {
-        font-size: 22px;
+
+        font-size: 23px;
+
       }
 
+
       .status-box {
+
         flex-direction: column;
+
         text-align: center;
+
       }
+
     }
+
   </style>
+
 </head>
+
 
 <body>
 
-  <!-- HEADER -->
-  <div class="header">
-    <h1>💡 Kontrol Lampu</h1>
-    <p>Web Server Kontrol 8 Lampu</p>
+
+  <!-- =====================================================
+       HEADER
+       ===================================================== -->
+
+  <header class="header">
+
+    <h1>
+      💡 Kontrol 8 Lampu
+    </h1>
+
+    <p>
+      Sistem Kontrol Lampu Berbasis IoT
+    </p>
+
+
+    <!-- STATUS SUPABASE -->
+
+    <div class="connection">
+
+      <span
+        id="connectionDot"
+        class="connection-dot">
+      </span>
+
+      <span id="connectionText">
+        Menghubungkan ke Supabase...
+      </span>
+
+    </div>
+
+  </header>
+
+
+
+  <!-- =====================================================
+       LOADING
+       ===================================================== -->
+
+  <div
+    id="loading"
+    class="loading">
+
+    Memproses...
+
   </div>
 
 
-  <!-- CONTENT -->
-  <div class="container">
 
-    <!-- STATUS KESELURUHAN -->
+  <!-- =====================================================
+       NOTIFICATION
+       ===================================================== -->
+
+  <div
+    id="notification"
+    class="notification">
+
+  </div>
+
+
+
+  <!-- =====================================================
+       CONTENT
+       ===================================================== -->
+
+  <main class="container">
+
+
+    <!-- ===================================================
+         STATUS KESELURUHAN
+         =================================================== -->
+
     <div class="status-box">
 
+
       <div class="status-title">
+
         Status Lampu
+
       </div>
 
+
       <div class="status-count">
+
         Lampu Menyala:
-        <span id="jumlahNyala">0</span> / 8
+
+        <span id="jumlahNyala">
+          0
+        </span>
+
+        / 8
+
       </div>
+
 
     </div>
 
 
-    <!-- GRID 8 LAMPU -->
+
+    <!-- ===================================================
+         GRID LAMPU
+         =================================================== -->
+
     <div class="lamp-grid">
 
-      <!-- LAMPU 1 -->
-      <div class="lamp-card" id="lamp1">
-        <div class="lamp-icon">💡</div>
+
+      <!-- =================================================
+           LAMPU 1
+           ================================================= -->
+
+      <div
+        class="lamp-card"
+        id="lamp1">
+
+        <div class="lamp-icon">
+          💡
+        </div>
 
         <div class="lamp-name">
           Lampu 1
@@ -242,20 +681,40 @@
         </div>
 
         <div class="button-group">
-          <button class="btn-on" onclick="lampControl(1, true)">
+
+          <button
+            class="btn-on"
+            onclick="setLamp(1, true)">
+
             ON
+
           </button>
 
-          <button class="btn-off" onclick="lampControl(1, false)">
+          <button
+            class="btn-off"
+            onclick="setLamp(1, false)">
+
             OFF
+
           </button>
+
         </div>
+
       </div>
 
 
-      <!-- LAMPU 2 -->
-      <div class="lamp-card" id="lamp2">
-        <div class="lamp-icon">💡</div>
+
+      <!-- =================================================
+           LAMPU 2
+           ================================================= -->
+
+      <div
+        class="lamp-card"
+        id="lamp2">
+
+        <div class="lamp-icon">
+          💡
+        </div>
 
         <div class="lamp-name">
           Lampu 2
@@ -266,20 +725,40 @@
         </div>
 
         <div class="button-group">
-          <button class="btn-on" onclick="lampControl(2, true)">
+
+          <button
+            class="btn-on"
+            onclick="setLamp(2, true)">
+
             ON
+
           </button>
 
-          <button class="btn-off" onclick="lampControl(2, false)">
+          <button
+            class="btn-off"
+            onclick="setLamp(2, false)">
+
             OFF
+
           </button>
+
         </div>
+
       </div>
 
 
-      <!-- LAMPU 3 -->
-      <div class="lamp-card" id="lamp3">
-        <div class="lamp-icon">💡</div>
+
+      <!-- =================================================
+           LAMPU 3
+           ================================================= -->
+
+      <div
+        class="lamp-card"
+        id="lamp3">
+
+        <div class="lamp-icon">
+          💡
+        </div>
 
         <div class="lamp-name">
           Lampu 3
@@ -290,20 +769,40 @@
         </div>
 
         <div class="button-group">
-          <button class="btn-on" onclick="lampControl(3, true)">
+
+          <button
+            class="btn-on"
+            onclick="setLamp(3, true)">
+
             ON
+
           </button>
 
-          <button class="btn-off" onclick="lampControl(3, false)">
+          <button
+            class="btn-off"
+            onclick="setLamp(3, false)">
+
             OFF
+
           </button>
+
         </div>
+
       </div>
 
 
-      <!-- LAMPU 4 -->
-      <div class="lamp-card" id="lamp4">
-        <div class="lamp-icon">💡</div>
+
+      <!-- =================================================
+           LAMPU 4
+           ================================================= -->
+
+      <div
+        class="lamp-card"
+        id="lamp4">
+
+        <div class="lamp-icon">
+          💡
+        </div>
 
         <div class="lamp-name">
           Lampu 4
@@ -314,20 +813,40 @@
         </div>
 
         <div class="button-group">
-          <button class="btn-on" onclick="lampControl(4, true)">
+
+          <button
+            class="btn-on"
+            onclick="setLamp(4, true)">
+
             ON
+
           </button>
 
-          <button class="btn-off" onclick="lampControl(4, false)">
+          <button
+            class="btn-off"
+            onclick="setLamp(4, false)">
+
             OFF
+
           </button>
+
         </div>
+
       </div>
 
 
-      <!-- LAMPU 5 -->
-      <div class="lamp-card" id="lamp5">
-        <div class="lamp-icon">💡</div>
+
+      <!-- =================================================
+           LAMPU 5
+           ================================================= -->
+
+      <div
+        class="lamp-card"
+        id="lamp5">
+
+        <div class="lamp-icon">
+          💡
+        </div>
 
         <div class="lamp-name">
           Lampu 5
@@ -338,20 +857,40 @@
         </div>
 
         <div class="button-group">
-          <button class="btn-on" onclick="lampControl(5, true)">
+
+          <button
+            class="btn-on"
+            onclick="setLamp(5, true)">
+
             ON
+
           </button>
 
-          <button class="btn-off" onclick="lampControl(5, false)">
+          <button
+            class="btn-off"
+            onclick="setLamp(5, false)">
+
             OFF
+
           </button>
+
         </div>
+
       </div>
 
 
-      <!-- LAMPU 6 -->
-      <div class="lamp-card" id="lamp6">
-        <div class="lamp-icon">💡</div>
+
+      <!-- =================================================
+           LAMPU 6
+           ================================================= -->
+
+      <div
+        class="lamp-card"
+        id="lamp6">
+
+        <div class="lamp-icon">
+          💡
+        </div>
 
         <div class="lamp-name">
           Lampu 6
@@ -362,20 +901,40 @@
         </div>
 
         <div class="button-group">
-          <button class="btn-on" onclick="lampControl(6, true)">
+
+          <button
+            class="btn-on"
+            onclick="setLamp(6, true)">
+
             ON
+
           </button>
 
-          <button class="btn-off" onclick="lampControl(6, false)">
+          <button
+            class="btn-off"
+            onclick="setLamp(6, false)">
+
             OFF
+
           </button>
+
         </div>
+
       </div>
 
 
-      <!-- LAMPU 7 -->
-      <div class="lamp-card" id="lamp7">
-        <div class="lamp-icon">💡</div>
+
+      <!-- =================================================
+           LAMPU 7
+           ================================================= -->
+
+      <div
+        class="lamp-card"
+        id="lamp7">
+
+        <div class="lamp-icon">
+          💡
+        </div>
 
         <div class="lamp-name">
           Lampu 7
@@ -386,20 +945,40 @@
         </div>
 
         <div class="button-group">
-          <button class="btn-on" onclick="lampControl(7, true)">
+
+          <button
+            class="btn-on"
+            onclick="setLamp(7, true)">
+
             ON
+
           </button>
 
-          <button class="btn-off" onclick="lampControl(7, false)">
+          <button
+            class="btn-off"
+            onclick="setLamp(7, false)">
+
             OFF
+
           </button>
+
         </div>
+
       </div>
 
 
-      <!-- LAMPU 8 -->
-      <div class="lamp-card" id="lamp8">
-        <div class="lamp-icon">💡</div>
+
+      <!-- =================================================
+           LAMPU 8
+           ================================================= -->
+
+      <div
+        class="lamp-card"
+        id="lamp8">
+
+        <div class="lamp-icon">
+          💡
+        </div>
 
         <div class="lamp-name">
           Lampu 8
@@ -410,127 +989,734 @@
         </div>
 
         <div class="button-group">
-          <button class="btn-on" onclick="lampControl(8, true)">
+
+          <button
+            class="btn-on"
+            onclick="setLamp(8, true)">
+
             ON
+
           </button>
 
-          <button class="btn-off" onclick="lampControl(8, false)">
+          <button
+            class="btn-off"
+            onclick="setLamp(8, false)">
+
             OFF
+
           </button>
+
         </div>
+
       </div>
 
+
     </div>
 
 
-    <!-- FOOTER -->
+    <!-- ===================================================
+         FOOTER
+         =================================================== -->
+
     <div class="footer">
-      Sistem Kontrol Lampu Berbasis Web
+
+      ESP32 + Supabase
+      <br>
+      Kontrol 8 Lampu
+
     </div>
 
-  </div>
+
+  </main>
 
 
-  <!-- JAVASCRIPT -->
+
+  <!-- =====================================================
+       JAVASCRIPT
+       ===================================================== -->
+
   <script>
 
-    // Status awal 8 lampu
-    let lampStatus = [
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false
-    ];
+
+    // =====================================================
+    // KONFIGURASI SUPABASE
+    // =====================================================
+
+    const SUPABASE_URL =
+      "https://knouctnoltjlkaqrtlab.supabase.co";
 
 
-    // Fungsi kontrol lampu
-    function lampControl(lampNumber, status) {
-
-      // Simpan status
-      lampStatus[lampNumber - 1] = status;
+    const SUPABASE_KEY =
+      "sb_publishable_jlNa0sU4oX_p-BwHvVKU7w_-lEfq0bZ";
 
 
-      // Ambil card lampu
-      const lampCard = document.getElementById(
-        "lamp" + lampNumber
+    // =====================================================
+    // INISIALISASI SUPABASE
+    // =====================================================
+
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
       );
 
 
-      // Ambil tulisan status
-      const statusText =
-        lampCard.querySelector(".lamp-status");
+    // =====================================================
+    // ID DATA YANG DIGUNAKAN
+    // =====================================================
+
+    const DATA_ID = 1;
 
 
-      // Jika ON
-      if (status === true) {
+    // =====================================================
+    // STATUS LAMPU DI WEB
+    // =====================================================
 
-        lampCard.classList.add("active");
+    let lampStatus = {
 
-        statusText.innerHTML = "ON";
+      lamp1: false,
 
-      }
+      lamp2: false,
 
-      // Jika OFF
-      else {
+      lamp3: false,
 
-        lampCard.classList.remove("active");
+      lamp4: false,
 
-        statusText.innerHTML = "OFF";
+      lamp5: false,
 
-      }
+      lamp6: false,
+
+      lamp7: false,
+
+      lamp8: false
+
+    };
 
 
-      // Update jumlah lampu menyala
-      updateJumlahNyala();
+    // =====================================================
+    // FUNGSI NOTIFIKASI
+    // =====================================================
+
+    function showNotification(
+      message,
+      type
+    ) {
 
 
-      /*
-       * NANTI BAGIAN INI YANG DIHUBUNGKAN
-       * KE ESP32.
-       *
-       * Contoh:
-       *
-       * fetch("/lamp1/on");
-       *
-       * atau
-       *
-       * fetch("/lamp1/off");
-       */
+      const notification =
+        document.getElementById(
+          "notification"
+        );
 
-      console.log(
-        "Lampu " +
-        lampNumber +
-        " = " +
-        (status ? "ON" : "OFF")
+
+      notification.innerText =
+        message;
+
+
+      notification.className =
+        "notification " + type;
+
+
+      notification.style.display =
+        "block";
+
+
+      setTimeout(
+        function() {
+
+          notification.style.display =
+            "none";
+
+        },
+        2500
       );
+
     }
 
 
-    // Menghitung jumlah lampu ON
+    // =====================================================
+    // FUNGSI LOADING
+    // =====================================================
+
+    function showLoading(
+      show
+    ) {
+
+
+      const loading =
+        document.getElementById(
+          "loading"
+        );
+
+
+      if (show) {
+
+        loading.style.display =
+          "block";
+
+      }
+
+      else {
+
+        loading.style.display =
+          "none";
+
+      }
+
+    }
+
+
+    // =====================================================
+    // STATUS KONEKSI
+    // =====================================================
+
+    function setConnectionStatus(
+      connected
+    ) {
+
+
+      const dot =
+        document.getElementById(
+          "connectionDot"
+        );
+
+
+      const text =
+        document.getElementById(
+          "connectionText"
+        );
+
+
+      if (connected) {
+
+        dot.classList.add(
+          "connected"
+        );
+
+
+        text.innerText =
+          "Terhubung ke Supabase";
+
+      }
+
+      else {
+
+        dot.classList.remove(
+          "connected"
+        );
+
+
+        text.innerText =
+          "Tidak terhubung ke Supabase";
+
+      }
+
+    }
+
+
+    // =====================================================
+    // AMBIL DATA DARI SUPABASE
+    // =====================================================
+
+    async function getLampStatus() {
+
+
+      try {
+
+
+        const {
+          data,
+          error
+        } = await supabaseClient
+
+          .from("lamp_control")
+
+          .select(
+            "id,lamp1,lamp2,lamp3,lamp4,lamp5,lamp6,lamp7,lamp8"
+          )
+
+          .eq(
+            "id",
+            DATA_ID
+          )
+
+          .single();
+
+
+        // ===============================================
+        // JIKA ERROR
+        // ===============================================
+
+        if (error) {
+
+          console.error(
+            "Supabase Error:",
+            error
+          );
+
+
+          setConnectionStatus(
+            false
+          );
+
+
+          return;
+
+        }
+
+
+        // ===============================================
+        // SUPABASE TERHUBUNG
+        // ===============================================
+
+        setConnectionStatus(
+          true
+        );
+
+
+        // ===============================================
+        // SIMPAN STATUS
+        // ===============================================
+
+        lampStatus.lamp1 =
+          data.lamp1;
+
+        lampStatus.lamp2 =
+          data.lamp2;
+
+        lampStatus.lamp3 =
+          data.lamp3;
+
+        lampStatus.lamp4 =
+          data.lamp4;
+
+        lampStatus.lamp5 =
+          data.lamp5;
+
+        lampStatus.lamp6 =
+          data.lamp6;
+
+        lampStatus.lamp7 =
+          data.lamp7;
+
+        lampStatus.lamp8 =
+          data.lamp8;
+
+
+        // ===============================================
+        // UPDATE TAMPILAN
+        // ===============================================
+
+        updateAllLampDisplay();
+
+
+      }
+
+
+      catch (error) {
+
+
+        console.error(
+          "Connection Error:",
+          error
+        );
+
+
+        setConnectionStatus(
+          false
+        );
+
+      }
+
+    }
+
+
+    // =====================================================
+    // MENGUBAH STATUS LAMPU
+    // =====================================================
+
+    async function setLamp(
+      lampNumber,
+      status
+    ) {
+
+
+      try {
+
+
+        showLoading(
+          true
+        );
+
+
+        // ===============================================
+        // NAMA KOLOM
+        // ===============================================
+
+        const column =
+          "lamp" +
+          lampNumber;
+
+
+        // ===============================================
+        // DATA YANG AKAN DIKIRIM
+        // ===============================================
+
+        const updateData = {};
+
+
+        updateData[column] =
+          status;
+
+
+        // ===============================================
+        // UPDATE SUPABASE
+        // ===============================================
+
+        const {
+          error
+        } = await supabaseClient
+
+          .from("lamp_control")
+
+          .update(
+            updateData
+          )
+
+          .eq(
+            "id",
+            DATA_ID
+          );
+
+
+        // ===============================================
+        // ERROR
+        // ===============================================
+
+        if (error) {
+
+          console.error(
+            "Update Error:",
+            error
+          );
+
+
+          showNotification(
+            "Gagal mengubah Lampu " +
+            lampNumber,
+            "error"
+          );
+
+
+          setConnectionStatus(
+            false
+          );
+
+
+          showLoading(
+            false
+          );
+
+
+          return;
+
+        }
+
+
+        // ===============================================
+        // UPDATE STATUS LOKAL
+        // ===============================================
+
+        lampStatus[column] =
+          status;
+
+
+        // ===============================================
+        // UPDATE TAMPILAN
+        // ===============================================
+
+        updateLampDisplay(
+          lampNumber,
+          status
+        );
+
+
+        updateJumlahNyala();
+
+
+        // ===============================================
+        // NOTIFIKASI
+        // ===============================================
+
+        showNotification(
+
+          "Lampu " +
+          lampNumber +
+          " " +
+          (
+            status
+              ? "ON"
+              : "OFF"
+          ),
+
+          "success"
+
+        );
+
+
+        setConnectionStatus(
+          true
+        );
+
+
+      }
+
+
+      catch (error) {
+
+
+        console.error(
+          error
+        );
+
+
+        showNotification(
+          "Terjadi kesalahan koneksi",
+          "error"
+        );
+
+
+      }
+
+
+      finally {
+
+        showLoading(
+          false
+        );
+
+      }
+
+    }
+
+
+    // =====================================================
+    // UPDATE TAMPILAN SATU LAMPU
+    // =====================================================
+
+    function updateLampDisplay(
+      lampNumber,
+      status
+    ) {
+
+
+      const card =
+        document.getElementById(
+          "lamp" +
+          lampNumber
+        );
+
+
+      if (!card) {
+
+        return;
+
+      }
+
+
+      const statusText =
+        card.querySelector(
+          ".lamp-status"
+        );
+
+
+      if (status) {
+
+
+        // ===============================================
+        // LAMPU ON
+        // ===============================================
+
+        card.classList.add(
+          "active"
+        );
+
+
+        statusText.innerText =
+          "ON";
+
+      }
+
+
+      else {
+
+
+        // ===============================================
+        // LAMPU OFF
+        // ===============================================
+
+        card.classList.remove(
+          "active"
+        );
+
+
+        statusText.innerText =
+          "OFF";
+
+      }
+
+    }
+
+
+    // =====================================================
+    // UPDATE SEMUA LAMPU
+    // =====================================================
+
+    function updateAllLampDisplay() {
+
+
+      updateLampDisplay(
+        1,
+        lampStatus.lamp1
+      );
+
+
+      updateLampDisplay(
+        2,
+        lampStatus.lamp2
+      );
+
+
+      updateLampDisplay(
+        3,
+        lampStatus.lamp3
+      );
+
+
+      updateLampDisplay(
+        4,
+        lampStatus.lamp4
+      );
+
+
+      updateLampDisplay(
+        5,
+        lampStatus.lamp5
+      );
+
+
+      updateLampDisplay(
+        6,
+        lampStatus.lamp6
+      );
+
+
+      updateLampDisplay(
+        7,
+        lampStatus.lamp7
+      );
+
+
+      updateLampDisplay(
+        8,
+        lampStatus.lamp8
+      );
+
+
+      updateJumlahNyala();
+
+    }
+
+
+    // =====================================================
+    // HITUNG JUMLAH LAMPU ON
+    // =====================================================
+
     function updateJumlahNyala() {
+
 
       let jumlah = 0;
 
 
-      for (let i = 0; i < lampStatus.length; i++) {
+      if (
+        lampStatus.lamp1
+      ) jumlah++;
 
-        if (lampStatus[i] === true) {
-          jumlah++;
-        }
 
-      }
+      if (
+        lampStatus.lamp2
+      ) jumlah++;
+
+
+      if (
+        lampStatus.lamp3
+      ) jumlah++;
+
+
+      if (
+        lampStatus.lamp4
+      ) jumlah++;
+
+
+      if (
+        lampStatus.lamp5
+      ) jumlah++;
+
+
+      if (
+        lampStatus.lamp6
+      ) jumlah++;
+
+
+      if (
+        lampStatus.lamp7
+      ) jumlah++;
+
+
+      if (
+        lampStatus.lamp8
+      ) jumlah++;
 
 
       document.getElementById(
         "jumlahNyala"
-      ).innerHTML = jumlah;
+      ).innerText =
+        jumlah;
+
     }
+
+
+    // =====================================================
+    // AUTO REFRESH STATUS
+    // =====================================================
+
+    setInterval(
+      function() {
+
+        getLampStatus();
+
+      },
+      2000
+    );
+
+
+    // =====================================================
+    // JALANKAN SAAT HALAMAN DIBUKA
+    // =====================================================
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      function() {
+
+        getLampStatus();
+
+      }
+    );
+
 
   </script>
 
+
 </body>
+
 </html>
