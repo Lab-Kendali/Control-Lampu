@@ -1,1 +1,536 @@
-index.html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Kontrol 8 Lampu</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: #f2f4f7;
+      color: #222;
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .header {
+      background: #1f2937;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+
+    .header p {
+      font-size: 14px;
+      color: #d1d5db;
+    }
+
+    /* CONTAINER */
+    .container {
+      width: 95%;
+      max-width: 1100px;
+      margin: 30px auto;
+    }
+
+    /* STATUS */
+    .status-box {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .status-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .status-count {
+      font-size: 16px;
+    }
+
+    #jumlahNyala {
+      font-weight: bold;
+      color: #16a34a;
+    }
+
+    /* GRID LAMPU */
+    .lamp-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    /* CARD LAMPU */
+    .lamp-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px 15px;
+      text-align: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      transition: 0.3s;
+    }
+
+    .lamp-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+    }
+
+    /* ICON LAMPU */
+    .lamp-icon {
+      font-size: 55px;
+      margin-bottom: 10px;
+      filter: grayscale(1);
+      opacity: 0.5;
+      transition: 0.3s;
+    }
+
+    .lamp-card.active .lamp-icon {
+      filter: grayscale(0);
+      opacity: 1;
+    }
+
+    .lamp-name {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .lamp-status {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #dc2626;
+    }
+
+    .lamp-card.active .lamp-status {
+      color: #16a34a;
+    }
+
+    /* TOMBOL */
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .btn-on {
+      background: #22c55e;
+      color: white;
+    }
+
+    .btn-on:hover {
+      background: #16a34a;
+    }
+
+    .btn-off {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn-off:hover {
+      background: #dc2626;
+    }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      margin-top: 35px;
+      padding: 20px;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 800px) {
+      .lamp-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 500px) {
+      .lamp-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 22px;
+      }
+
+      .status-box {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>💡 Kontrol Lampu</h1>
+    <p>Web Server Kontrol 8 Lampu</p>
+  </div>
+
+
+  <!-- CONTENT -->
+  <div class="container">
+
+    <!-- STATUS KESELURUHAN -->
+    <div class="status-box">
+
+      <div class="status-title">
+        Status Lampu
+      </div>
+
+      <div class="status-count">
+        Lampu Menyala:
+        <span id="jumlahNyala">0</span> / 8
+      </div>
+
+    </div>
+
+
+    <!-- GRID 8 LAMPU -->
+    <div class="lamp-grid">
+
+      <!-- LAMPU 1 -->
+      <div class="lamp-card" id="lamp1">
+        <div class="lamp-icon">💡</div>
+
+        <div class="lamp-name">
+          Lampu 1
+        </div>
+
+        <div class="lamp-status">
+          OFF
+        </div>
+
+        <div class="button-group">
+          <button class="btn-on" onclick="lampControl(1, true)">
+            ON
+          </button>
+
+          <button class="btn-off" onclick="lampControl(1, false)">
+            OFF
+          </button>
+        </div>
+      </div>
+
+
+      <!-- LAMPU 2 -->
+      <div class="lamp-card" id="lamp2">
+        <div class="lamp-icon">💡</div>
+
+        <div class="lamp-name">
+          Lampu 2
+        </div>
+
+        <div class="lamp-status">
+          OFF
+        </div>
+
+        <div class="button-group">
+          <button class="btn-on" onclick="lampControl(2, true)">
+            ON
+          </button>
+
+          <button class="btn-off" onclick="lampControl(2, false)">
+            OFF
+          </button>
+        </div>
+      </div>
+
+
+      <!-- LAMPU 3 -->
+      <div class="lamp-card" id="lamp3">
+        <div class="lamp-icon">💡</div>
+
+        <div class="lamp-name">
+          Lampu 3
+        </div>
+
+        <div class="lamp-status">
+          OFF
+        </div>
+
+        <div class="button-group">
+          <button class="btn-on" onclick="lampControl(3, true)">
+            ON
+          </button>
+
+          <button class="btn-off" onclick="lampControl(3, false)">
+            OFF
+          </button>
+        </div>
+      </div>
+
+
+      <!-- LAMPU 4 -->
+      <div class="lamp-card" id="lamp4">
+        <div class="lamp-icon">💡</div>
+
+        <div class="lamp-name">
+          Lampu 4
+        </div>
+
+        <div class="lamp-status">
+          OFF
+        </div>
+
+        <div class="button-group">
+          <button class="btn-on" onclick="lampControl(4, true)">
+            ON
+          </button>
+
+          <button class="btn-off" onclick="lampControl(4, false)">
+            OFF
+          </button>
+        </div>
+      </div>
+
+
+      <!-- LAMPU 5 -->
+      <div class="lamp-card" id="lamp5">
+        <div class="lamp-icon">💡</div>
+
+        <div class="lamp-name">
+          Lampu 5
+        </div>
+
+        <div class="lamp-status">
+          OFF
+        </div>
+
+        <div class="button-group">
+          <button class="btn-on" onclick="lampControl(5, true)">
+            ON
+          </button>
+
+          <button class="btn-off" onclick="lampControl(5, false)">
+            OFF
+          </button>
+        </div>
+      </div>
+
+
+      <!-- LAMPU 6 -->
+      <div class="lamp-card" id="lamp6">
+        <div class="lamp-icon">💡</div>
+
+        <div class="lamp-name">
+          Lampu 6
+        </div>
+
+        <div class="lamp-status">
+          OFF
+        </div>
+
+        <div class="button-group">
+          <button class="btn-on" onclick="lampControl(6, true)">
+            ON
+          </button>
+
+          <button class="btn-off" onclick="lampControl(6, false)">
+            OFF
+          </button>
+        </div>
+      </div>
+
+
+      <!-- LAMPU 7 -->
+      <div class="lamp-card" id="lamp7">
+        <div class="lamp-icon">💡</div>
+
+        <div class="lamp-name">
+          Lampu 7
+        </div>
+
+        <div class="lamp-status">
+          OFF
+        </div>
+
+        <div class="button-group">
+          <button class="btn-on" onclick="lampControl(7, true)">
+            ON
+          </button>
+
+          <button class="btn-off" onclick="lampControl(7, false)">
+            OFF
+          </button>
+        </div>
+      </div>
+
+
+      <!-- LAMPU 8 -->
+      <div class="lamp-card" id="lamp8">
+        <div class="lamp-icon">💡</div>
+
+        <div class="lamp-name">
+          Lampu 8
+        </div>
+
+        <div class="lamp-status">
+          OFF
+        </div>
+
+        <div class="button-group">
+          <button class="btn-on" onclick="lampControl(8, true)">
+            ON
+          </button>
+
+          <button class="btn-off" onclick="lampControl(8, false)">
+            OFF
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <div class="footer">
+      Sistem Kontrol Lampu Berbasis Web
+    </div>
+
+  </div>
+
+
+  <!-- JAVASCRIPT -->
+  <script>
+
+    // Status awal 8 lampu
+    let lampStatus = [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ];
+
+
+    // Fungsi kontrol lampu
+    function lampControl(lampNumber, status) {
+
+      // Simpan status
+      lampStatus[lampNumber - 1] = status;
+
+
+      // Ambil card lampu
+      const lampCard = document.getElementById(
+        "lamp" + lampNumber
+      );
+
+
+      // Ambil tulisan status
+      const statusText =
+        lampCard.querySelector(".lamp-status");
+
+
+      // Jika ON
+      if (status === true) {
+
+        lampCard.classList.add("active");
+
+        statusText.innerHTML = "ON";
+
+      }
+
+      // Jika OFF
+      else {
+
+        lampCard.classList.remove("active");
+
+        statusText.innerHTML = "OFF";
+
+      }
+
+
+      // Update jumlah lampu menyala
+      updateJumlahNyala();
+
+
+      /*
+       * NANTI BAGIAN INI YANG DIHUBUNGKAN
+       * KE ESP32.
+       *
+       * Contoh:
+       *
+       * fetch("/lamp1/on");
+       *
+       * atau
+       *
+       * fetch("/lamp1/off");
+       */
+
+      console.log(
+        "Lampu " +
+        lampNumber +
+        " = " +
+        (status ? "ON" : "OFF")
+      );
+    }
+
+
+    // Menghitung jumlah lampu ON
+    function updateJumlahNyala() {
+
+      let jumlah = 0;
+
+
+      for (let i = 0; i < lampStatus.length; i++) {
+
+        if (lampStatus[i] === true) {
+          jumlah++;
+        }
+
+      }
+
+
+      document.getElementById(
+        "jumlahNyala"
+      ).innerHTML = jumlah;
+    }
+
+  </script>
+
+</body>
+</html>
